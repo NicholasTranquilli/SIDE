@@ -54,7 +54,7 @@ public partial class MenuBarView : UserControl
         if (DataContext is MainViewModel vm && window is not null)
         {
             string newTabName = $"Untitled {vm.Items.Count + 1}";
-            string newTabContent = "Start Coding...";
+            string newTabContent = string.Empty;
 
             vm.AppendTab(newTabName, newTabContent, string.Empty);
         }
@@ -92,6 +92,7 @@ public partial class MenuBarView : UserControl
         var window = this.VisualRoot as Window;
         if (DataContext is MainViewModel vm && window is not null)
         {
+            // TODO: Change make dynamic path
             var path = @"D:\Resources\SIDE Plugins\ParseAssist.dll";
             MenuBarView.LoadAndShowPlugin(path, window);
         }
