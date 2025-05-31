@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SIDE.ViewModels"
+             xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SIDE.Views.MainView"
+             x:DataType="vm:MainViewModel"
+             xmlns:views="clr-namespace:SIDE.Views">
+  <Design.DataContext>
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+  <DockPanel>
+    
+    <!-- Menu Bar -->
+    <views:MenuBarView DockPanel.Dock="Top"/>
+    
+    <!-- Tabs -->
+    <TabControl ItemsSource="{Binding Items}" SelectedIndex="{Binding SelectedTabIndex}">
+      <TabControl.Styles>
+        <Style Selector="TabItem">
+          <Setter Property="FontSize" Value="12"/>
+          <Setter Property="Padding" Value="22,10"/>
+          <Setter Property="Margin" Value="0,-10,0,-15"/>
+        </Style>
+      </TabControl.Styles>
+
+      <TabControl.ItemTemplate>
+        <DataTemplate DataType="vm:TextEditorViewModel">
+          <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+      </TabControl.ItemTemplate>
+
+      <TabControl.ContentTemplate>
+        <DataTemplate DataType="vm:TextEditorViewModel">
+          <!-- Text Editor -->
+          <views:TextEditorView />
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+    
+  </DockPanel>
+
+</UserControl>

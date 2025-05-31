@@ -1,0 +1,99 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
+using SIDE.ViewModels;
+using Avalonia.Metadata;
+using Avalonia.Platform.Storage;
+using System;
+using System.IO;
+using System.Reflection;
+using PluginLib;
+namespace SIDE.Views;
+
+public partial class MenuBarView : UserControl
+{
+    public static void LoadAndShowPlugin(string pluginPath, Window parentWindow)
+    {
+        try
+        {
+            // Load the DLL
+            var asm = Assembly.LoadFrom(pluginPath);
+
+            // Look for types that implement IPluginWindow
+            foreach (var type in asm.GetTypes())
+            {
+                if (typeof(IPluginWindow).IsAssignableFrom(type) && !type.IsAbstract)
+                {
+                    // Create instance of the plugin
+                    if (Activator.CreateInstance(type) is IPluginWindow plugin)
+                    {
+                        var window = plugin.CreateWindow();
+                        window.Show(parentWindow); // show with optional parent
+                        return;
+                    }
+                }
+            }
+
+            Console.WriteLine("No valid plugin found.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Plugin load failed: {ex.Message}");
+        }
+    }
+
+    public MenuBarView()
+    {
+        InitializeComponent();
+    }
+
+    private void MenuItemNew_Clicked(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            string newTabName = $"Untitled {vm.Items.Count + 1}";
+            string newTabContent = "Start Coding...";
+
+            vm.AppendTab(newTabName, newTabContent, string.Empty);
+        }
+    }
+
+    private void MenuItemOpen_Clicked(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            vm.OnOpenFile.Execute(window).Subscribe();
+        }
+    }
+
+    private void MenuItemSave_Clicked(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            vm.QuickSave(window);
+        }
+    }
+
+    private void MenuItemSaveAs_Clicked(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            vm.OnSaveFileAs.Execute(window).Subscribe();
+        }
+    }
+
+    private void LoadPlugin_Click(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            var path = @"D:\Resources\SIDE Plugins\ParseAssist.dll";
+            MenuBarView.LoadAndShowPlugin(path, window);
+        }
+    }
+}

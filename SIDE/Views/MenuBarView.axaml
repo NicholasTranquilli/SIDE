@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SIDE.ViewModels"             
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:MainViewModel"
+             x:Class="SIDE.Views.MenuBarView">
+
+  <Menu>
+    <MenuItem Header="_File">
+      <MenuItem Header="New" Click="MenuItemNew_Clicked"/>
+      <MenuItem Header="Open..." Click="MenuItemOpen_Clicked"/>
+
+      <MenuItem IsEnabled="False">
+        <MenuItem.Header>
+          <Grid ColumnDefinitions="Auto, *, Auto" >
+            <TextBlock Grid.Column="0" Text="Reload"/>
+            <TextBlock Grid.Column="1" Text="Ctrl + R" Margin="35,0,-20,0" Foreground="Gray" HorizontalAlignment="Right"/>
+          </Grid>
+        </MenuItem.Header>
+      </MenuItem>
+
+      <MenuItem Click="MenuItemSave_Clicked">
+        <MenuItem.Header>
+          <Grid ColumnDefinitions="Auto, *, Auto" >
+            <TextBlock Grid.Column="0" Text="Save"/>
+            <TextBlock Grid.Column="1" Text="Ctrl + S" Margin="35,0,-20,0" Foreground="Gray" HorizontalAlignment="Right"/>
+          </Grid>
+        </MenuItem.Header>
+      </MenuItem>
+
+      <MenuItem Click="MenuItemSaveAs_Clicked">
+        <MenuItem.Header>
+          <Grid ColumnDefinitions="Auto, *, Auto" >
+            <TextBlock Grid.Column="0" Text="Save As..."/>
+            <TextBlock Grid.Column="1" Text="Ctrl + Shift + S" Margin="35,0,-20,0" Foreground="Gray" HorizontalAlignment="Right"/>
+          </Grid>
+        </MenuItem.Header>
+      </MenuItem>
+
+      <MenuItem IsEnabled="False" Header="Rename"/>
+      <MenuItem IsEnabled="False" Header="Close"/>
+      <Separator />
+      <MenuItem IsEnabled="False" Header="Exit" />
+    </MenuItem>
+
+    <MenuItem Header="_View">
+      <MenuItem IsEnabled="False" Header="Terminal" />
+      <MenuItem IsEnabled="False" Header="File System" />
+    </MenuItem>
+
+    <MenuItem Header="_Language">
+      <MenuItem IsEnabled="False" Header="Edit Default Language..." />
+      <MenuItem IsEnabled="False" Header="Language Manager..." />
+    </MenuItem>
+
+    <MenuItem Header="_Settings">
+      <MenuItem IsEnabled="False" Header="Theme Manager..." />
+    </MenuItem>
+
+
+    <MenuItem Header="_Plugins">
+      <MenuItem IsEnabled="False" Header="Plugins Manager..." />
+    </MenuItem>
+  </Menu>
+
+</UserControl>
