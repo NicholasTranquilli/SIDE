@@ -17,19 +17,16 @@ public partial class MenuBarView : UserControl
     {
         try
         {
-            // Load the DLL
             var asm = Assembly.LoadFrom(pluginPath);
 
-            // Look for types that implement IPluginWindow
             foreach (var type in asm.GetTypes())
             {
                 if (typeof(IPluginWindow).IsAssignableFrom(type) && !type.IsAbstract)
                 {
-                    // Create instance of the plugin
                     if (Activator.CreateInstance(type) is IPluginWindow plugin)
                     {
                         var window = plugin.CreateWindow();
-                        window.Show(parentWindow); // show with optional parent
+                        window.Show(parentWindow);
                         return;
                     }
                 }
@@ -85,6 +82,21 @@ public partial class MenuBarView : UserControl
         {
             vm.OnSaveFileAs.Execute(window).Subscribe();
         }
+    }
+
+    private void MenuItemSetBuildScript_Clicked(object? sender, RoutedEventArgs e)
+    {
+        var window = this.VisualRoot as Window;
+        if (DataContext is MainViewModel vm && window is not null)
+        {
+            vm.OnSetBuildScript.Execute(window).Subscribe();
+        }
+    }
+
+    private void MenuItemBuild_Clicked(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainViewModel vm)
+            vm.OnBuild.Execute().Subscribe();
     }
 
     private void LoadPlugin_Click(object? sender, RoutedEventArgs e)

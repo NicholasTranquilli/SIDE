@@ -8,9 +8,11 @@
              x:Class="SIDE.Views.MenuBarView">
 
   <Menu>
+    <!-- File -->
     <MenuItem Header="_File">
       <MenuItem Header="New" Click="MenuItemNew_Clicked"/>
       <MenuItem Header="Open..." Click="MenuItemOpen_Clicked"/>
+      <MenuItem IsEnabled="False" Header="Open Project..." Click="MenuItemOpen_Clicked"/>
 
       <MenuItem IsEnabled="False">
         <MenuItem.Header>
@@ -45,24 +47,52 @@
       <MenuItem IsEnabled="False" Header="Exit" />
     </MenuItem>
 
+    <!-- View -->
     <MenuItem Header="_View">
       <MenuItem IsEnabled="False" Header="Terminal" />
       <MenuItem IsEnabled="False" Header="File System" />
     </MenuItem>
 
-    <MenuItem Header="_Language">
+    <!-- Environment -->
+    <MenuItem Header="_Environment">
       <MenuItem IsEnabled="False" Header="Edit Default Language..." />
+      <Separator/>
       <MenuItem IsEnabled="False" Header="Language Manager..." />
-    </MenuItem>
-
-    <MenuItem Header="_Settings">
       <MenuItem IsEnabled="False" Header="Theme Manager..." />
     </MenuItem>
 
-
+    <!-- Plugins -->
     <MenuItem Header="_Plugins">
       <MenuItem IsEnabled="False" Header="Plugins Manager..." />
     </MenuItem>
-  </Menu>
+    
+    <!-- Build -->
+    <MenuItem Header="_Build">
+      <MenuItem Click="MenuItemBuild_Clicked">
+        <MenuItem.Header>
+          <Grid ColumnDefinitions="Auto, *, Auto" >
+            <TextBlock Grid.Column="0" Text="Build"/>
+            <TextBlock Grid.Column="1" Text="Ctrl + B" Margin="35,0,-20,0" Foreground="Gray" HorizontalAlignment="Right"/>
+          </Grid>
+        </MenuItem.Header>
+      </MenuItem>
+      
+      <MenuItem Header="Change Build Script..." Click="MenuItemSetBuildScript_Clicked" />
+    </MenuItem>
 
+    <!-- Run -->
+    <MenuItem Header="_Run">
+      <MenuItem IsEnabled="False" Click="">
+        <MenuItem.Header>
+          <Grid ColumnDefinitions="Auto, *, Auto" >
+            <TextBlock Grid.Column="0" Text="Run"/>
+            <TextBlock Grid.Column="1" Text="Ctrl + F5" Margin="35,0,-20,0" Foreground="Gray" HorizontalAlignment="Right"/>
+          </Grid>
+        </MenuItem.Header>
+      </MenuItem>
+      
+      <MenuItem IsEnabled="False" Header="Change Run Script..." />
+    </MenuItem>
+    
+  </Menu>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -10,11 +11,13 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using DynamicData;
 using ReactiveUI;
+using SIDE.Views;
 
 namespace SIDE.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        // Tabs //
         private ObservableCollection<TextEditorViewModel> _items;
         public ObservableCollection<TextEditorViewModel> Items
         {
@@ -36,6 +39,8 @@ namespace SIDE.ViewModels
             SelectedTabIndex = Items.Count - 1;
         }
 
+
+        // File Commands //
         public ReactiveCommand<Window, Unit> OnOpenFile { get; }
         private async Task OpenFile(Window window)
         {
@@ -129,6 +134,66 @@ namespace SIDE.ViewModels
             }
         }
 
+
+        // Terminal Data //
+        private string _terminalInput = "";
+        public string TerminalInput
+        {
+            get => _terminalInput;
+            set => this.RaiseAndSetIfChanged(ref _terminalInput, value);
+        }
+
+
+        // Build Commands //
+        public ReactiveCommand<Unit, Unit> OnBuild { get; }
+        private async Task Build()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/K {TerminalInput}",
+                    UseShellExecute = true
+                });
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                Process.Start("open", $"-a Terminal \"bash -c '{TerminalInput}; exec bash'\"");
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                string[] terminals = { "x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "xterm" };
+
+                foreach (var term in terminals)
+                {
+                    try
+                    {
+                        Process.Start(term, $"-e bash -c \"{TerminalInput}; exec bash\"");
+                        break;
+                    }
+                    catch { }
+                }
+
+                // TODO: if linux terminal not detected?
+            }
+        }
+
+        public ReactiveCommand<Window, Unit> OnSetBuildScript { get; }
+        private async Task SetBuildScript(Window window)
+        {
+            var vm = new SetBuildStringViewModel(TerminalInput);
+            var view = new SetBuildStringView
+            {
+                DataContext = vm
+            };
+
+            await view.ShowDialog(window);
+
+            // Update TerminalString after closing
+            TerminalInput = vm.TerminalString;
+        }
+
         public MainViewModel()
         {
             Items = new ObservableCollection<TextEditorViewModel>();
@@ -137,6 +202,7 @@ namespace SIDE.ViewModels
                 "Welcome",
                 "Roadmap:\n" +
                 "- Keyboard Shortcuts\n" +
+                "- Environment Files And Loading" +
                 "- Robust Plugin System\n" +
                 "- Theme Builder and Importer\n" +
                 "- Language features (auto indent, etc...)\n" +
@@ -150,8 +216,10 @@ namespace SIDE.ViewModels
                 string.Empty
             );
 
-            SelectedTabIndex = 0; 
+            SelectedTabIndex = 0;
 
+            OnBuild = ReactiveCommand.CreateFromTask(Build);
+            OnSetBuildScript = ReactiveCommand.CreateFromTask<Window>(SetBuildScript);
             OnOpenFile = ReactiveCommand.CreateFromTask<Window>(OpenFile);
             OnSaveFileAs = ReactiveCommand.CreateFromTask<Window>(SaveFileAs);
         }
