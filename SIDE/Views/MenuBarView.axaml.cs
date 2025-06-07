@@ -13,7 +13,7 @@ namespace SIDE.Views;
 
 public partial class MenuBarView : UserControl
 {
-    public static void LoadAndShowPlugin(string pluginPath, Window parentWindow)
+    public static void LoadAndShowPlugin(string pluginPath, Window parentWindow, ref MainViewModel vm)
     {
         try
         {
@@ -25,7 +25,8 @@ public partial class MenuBarView : UserControl
                 {
                     if (Activator.CreateInstance(type) is IPluginWindow plugin)
                     {
-                        var window = plugin.CreateWindow();
+                        vm.rPluginData.EditorText = vm.Items[vm.SelectedTabIndex].Content;
+                        var window = plugin.CreateWindow(vm.rPluginData);
                         window.Show(parentWindow);
                         return;
                     }
@@ -106,7 +107,7 @@ public partial class MenuBarView : UserControl
         {
             // TODO: Change make dynamic path
             var path = @"D:\Resources\SIDE Plugins\ParseAssist.dll";
-            MenuBarView.LoadAndShowPlugin(path, window);
+            MenuBarView.LoadAndShowPlugin(path, window, ref vm);
         }
     }
 }

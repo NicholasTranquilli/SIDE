@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using PluginLib;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,10 @@ namespace SIDE.ViewModels
 {
     public class TextEditorViewModel : ViewModelBase
     {
+        // Plugin Data
+        public HostToPluginData rPluginData;
+        // End Plugin Data
+
         public string SyntaxDefinitionFilePath { get; set; } = string.Empty;
 
         private string _filePath;
@@ -37,19 +42,24 @@ namespace SIDE.ViewModels
                 {
                     _content = value;
                     this.RaiseAndSetIfChanged(ref _content, value);
+                    rPluginData.EditorText = value;
                 }
             }
         }
 
-        public TextEditorViewModel()
+        public TextEditorViewModel(HostToPluginData data)
         {
+            this.rPluginData = data;
+
             this.Name = string.Empty;
             this.Content = string.Empty;
             this.FilePath = string.Empty;
         }
 
-        public TextEditorViewModel(string name, string content, string filePath)
+        public TextEditorViewModel(HostToPluginData data, string name, string content, string filePath)
         {
+            this.rPluginData = data;
+
             this.Name = name;
             this.Content = content;
             this.FilePath = filePath;

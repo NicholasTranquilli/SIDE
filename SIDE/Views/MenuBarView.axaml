@@ -63,7 +63,7 @@
 
     <!-- Plugins -->
     <MenuItem Header="_Plugins">
-      <MenuItem IsEnabled="False" Header="Plugins Manager..." />
+      <MenuItem IsEnabled="True" Click="LoadPlugin_Click" Header="Plugins Manager..." />
     </MenuItem>
     
     <!-- Build -->

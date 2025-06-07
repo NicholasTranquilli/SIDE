@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using DynamicData;
+using PluginLib;
 using ReactiveUI;
 using SIDE.Views;
 
@@ -17,6 +18,11 @@ namespace SIDE.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        // Demo Code
+        public HostToPluginData rPluginData { get; set; }
+
+        // End Demo Code
+
         // Tabs //
         private ObservableCollection<TextEditorViewModel> _items;
         public ObservableCollection<TextEditorViewModel> Items
@@ -34,7 +40,7 @@ namespace SIDE.ViewModels
 
         public void AppendTab(string tabName, string tabContent, string filePath)
         {
-            Items.Add(new TextEditorViewModel(tabName, tabContent, filePath));
+            Items.Add(new TextEditorViewModel(rPluginData, tabName, tabContent, filePath));
             
             SelectedTabIndex = Items.Count - 1;
         }
@@ -197,6 +203,7 @@ namespace SIDE.ViewModels
         public MainViewModel()
         {
             Items = new ObservableCollection<TextEditorViewModel>();
+            this.rPluginData = new HostToPluginData();
 
             AppendTab(
                 "Welcome",
