@@ -36,10 +36,6 @@ namespace PluginLib
         public string PluginName { get; }
 
         public HostToPluginData PluginData { get; set; }
-        //{
-        //    get => PluginData;
-        //    set => this.OnDataUpdate(value);
-        //}
 
         public Avalonia.Controls.Window CreateWindow(HostToPluginData data);
 
